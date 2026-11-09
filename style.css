@@ -43,7 +43,7 @@ button, .btn {
   color: #1a0b17; background: linear-gradient(90deg, var(--pink), var(--orange)); border: 0; border-radius: 10px;
 }
 button:disabled { opacity: .6; cursor: default; }
-button.ghost { color: var(--text); background: transparent; border: 1px solid var(--line); padding: 8px 12px; font-weight: 600; }
+.ghost { color: var(--text); background: transparent; border: 1px solid var(--line); padding: 8px 12px; font-weight: 600; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 #msg { min-height: 1.5em; margin: 0; }
 #msg.ok { color: var(--ok); }

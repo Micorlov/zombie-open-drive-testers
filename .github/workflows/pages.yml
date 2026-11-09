@@ -29,7 +29,7 @@ jobs:
       - name: Collect the site files
         run: |
           mkdir _site
-          cp index.html admin.html style.css common.js firebase.js trailer.mp4 poster.jpg _site/
+          cp index.html admin.html style.css common.js firebase.js trailer.mp4 poster.jpg og-image.jpg _site/
 
       - uses: actions/configure-pages@v5
 

@@ -7,7 +7,13 @@
 <meta name="description" content="Help test Zombie Open Drive, an open-world zombie driving game for Android. Send your Google account email to join the closed test.">
 <meta property="og:title" content="Zombie Open Drive: become an Android tester">
 <meta property="og:description" content="Drive a sunset Miami strip, shoot the zombie crowds, upgrade your car. 12 testers wanted.">
-<meta property="og:image" content="https://micorlov.github.io/zombie-open-drive-testers/poster.jpg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://micorlov.github.io/zombie-open-drive-testers/">
+<meta property="og:image" content="https://micorlov.github.io/zombie-open-drive-testers/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A teal car driving down a sunset Miami street toward a crowd of zombies">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,6 +43,7 @@
     <button id="send" type="submit">Send me an invite</button>
   </form>
   <p id="msg" role="status" aria-live="polite"></p>
+  <p><a id="wa" class="btn ghost" href="#" target="_blank" rel="noopener">Share on WhatsApp</a></p>
   <p class="muted">Needs an Android phone or tablet with Google Play. Other kinds of email can't join a Play test. Your email is only used to invite you to this test and is deleted afterwards.</p>
 
   <footer class="muted">Orlov Games · <a href="mailto:micorlov@gmail.com">micorlov@gmail.com</a></footer>
@@ -45,10 +52,11 @@
 <script type="module">
 import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 import { db } from './firebase.js';
-import { normalizeEmail, JOIN_URL } from './common.js';
+import { normalizeEmail, JOIN_URL, PAGE_URL } from './common.js';
 
 const $ = (id) => document.getElementById(id);
 $('join').href = JOIN_URL;
+$('wa').href = 'https://wa.me/?text=' + encodeURIComponent(`Help me test my Android game Zombie Open Drive. Sign up here: ${PAGE_URL}`);
 
 function say(text, cls = '') { $('msg').textContent = text; $('msg').className = cls; }
 
