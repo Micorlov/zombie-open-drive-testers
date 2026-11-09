@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zombie Open Drive: Android tester sign-up</title>
+<meta name="description" content="Help test Zombie Open Drive, an open-world zombie driving game for Android. Send your Google account email to join the closed test.">
+<meta property="og:title" content="Zombie Open Drive: become an Android tester">
+<meta property="og:description" content="Drive a sunset Miami strip, shoot the zombie crowds, upgrade your car. 12 testers wanted.">
+<meta property="og:image" content="https://micorlov.github.io/zombie-open-drive-testers/poster.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Help test <span>Zombie Open Drive</span></h1>
+  <p class="lead">An open-world zombie driving game for Android. Drive a sunset Miami strip, shoot the crowds from your car and upgrade your ride. Free, and I need 12 testers for 14 days.</p>
+
+  <video controls playsinline preload="metadata" poster="poster.jpg" src="trailer.mp4">
+    Your browser can't play the trailer. <a href="trailer.mp4">Download it</a>.
+  </video>
+
+  <h2>How it works</h2>
+  <ol class="steps card">
+    <li>Enter the email of the <strong>Google account on your Android phone</strong> below.</li>
+    <li>I add you to the test (usually within a day).</li>
+    <li>Open the <a id="join" href="#">join link</a> on that phone and tap <strong>Become a tester</strong>, then install the game from Google Play.</li>
+    <li>Keep it installed for 14 days and play when you like. That is what counts for Google.</li>
+  </ol>
+
+  <h2>Join the test</h2>
+  <form id="form" class="card" novalidate>
+    <div class="field">
+      <label for="email">Your Google account email</label>
+      <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@gmail.com" required maxlength="254">
+    </div>
+    <div class="hp" aria-hidden="true"><label>Leave this empty <input id="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+    <button id="send" type="submit">Send me an invite</button>
+  </form>
+  <p id="msg" role="status" aria-live="polite"></p>
+  <p class="muted">Needs an Android phone or tablet with Google Play. Other kinds of email can't join a Play test. Your email is only used to invite you to this test and is deleted afterwards.</p>
+
+  <footer class="muted">Orlov Games · <a href="mailto:micorlov@gmail.com">micorlov@gmail.com</a></footer>
+</main>
+
+<script type="module">
+import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
+import { db } from './firebase.js';
+import { normalizeEmail, JOIN_URL } from './common.js';
+
+const $ = (id) => document.getElementById(id);
+$('join').href = JOIN_URL;
+
+function say(text, cls = '') { $('msg').textContent = text; $('msg').className = cls; }
+
+$('form').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const email = normalizeEmail($('email').value);
+  if (!email) return say('That does not look like an email address.', 'err');
+  if ($('website').value) return say("Thanks! You're on the list.", 'ok'); // honeypot: bots fill it, pretend it worked
+  $('send').disabled = true;
+  say('Sending...');
+  try {
+    await setDoc(doc(db, 'testers', email), { email, createdAt: serverTimestamp(), added: false });
+    say("Thanks! You're on the list. I'll add you soon. Once you're added, open the join link above on your phone.", 'ok');
+    $('email').value = '';
+  } catch (e) {
+    // A second create of the same id is an update, which the rules deny: that means "already signed up".
+    if (e.code === 'permission-denied') say("Looks like you're already on the list. I'll add you soon.", 'ok');
+    else say('Could not send. Check your connection and try again, or email micorlov@gmail.com.', 'err');
+  } finally {
+    $('send').disabled = false;
+  }
+});
+</script>
+</body>
+</html>

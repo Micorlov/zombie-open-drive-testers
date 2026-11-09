@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // One doc per tester, id = lowercase email. Anyone may create their own; only the owner reads or changes.
+    match /testers/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['email', 'createdAt', 'added'])
+        && request.resource.data.email == id
+        && id.matches('^[a-z0-9._%+-]{1,64}@[a-z0-9.-]{1,190}\\.[a-z]{2,}$')
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.added == false;
+      allow read, update, delete: if request.auth != null
+        && request.auth.token.email == 'micorlov@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+  }
+}
